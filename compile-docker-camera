@@ -1,3 +1,4 @@
 #!/bin/bash
 docker build -t docker-camera/base ./base
 docker build -t docker-camera/motion ./motion
+docker-compose up -d
