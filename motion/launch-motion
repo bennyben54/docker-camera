@@ -1,0 +1,4 @@
+#!/bin/bash
+
+java -jar /folder-watch-0.0.1-SNAPSHOT.jar /tmp/motion/cam1 /tmp/motion/cam2 > /var/log/folder-watch.log &
+motion -n
