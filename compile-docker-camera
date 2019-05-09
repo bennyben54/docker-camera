@@ -1,4 +1,4 @@
 #!/bin/bash
 docker build -t docker-camera/base ./base
 docker build -t docker-camera/motion ./motion
-docker-compose up -d
+run -dit --restart always --device=/dev/video0:/dev/video0 --device=/dev/video1:/dev/video1 -p 8081:8081 -p 8082:8082  docker-camera/motion
