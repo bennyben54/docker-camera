@@ -1,15 +1,17 @@
-###docker-camera
+### docker-camera
+```
 Implementation of motion in docker container :
-2 USB cameras (/dev/video0 & /dev/video1) streaming respectively on 
+2 USB cameras (/dev/video0 & /dev/video1) streaming on localhost respectively on ports 8081 & 8082
+```
 
-###DEPENDENCIES
+### DEPENDENCIES
 ```
 docker
 wget
 unzip
 ```
 
-###INSTALLATION
+### INSTALLATION
 ```
 wget https://github.com/bennyben54/docker-camera/archive/master.zip
 unzip master.zip
