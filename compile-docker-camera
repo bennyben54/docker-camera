@@ -1,12 +1,12 @@
 #!/bin/bash
 docker build -t docker-camera/base ./base
 docker build -t docker-camera/motion ./motion
-docker run -e \
-        POSTGRES_DB=postgres \
-        POSTGRES_USER=beo \
-        POSTGRES_PASSWORD=beo \
+docker run \
+        -e POSTGRES_DB=postgres \
+        -e POSTGRES_USER=beo \
+        -e POSTGRES_PASSWORD=beo \
         --network host \
-        --volume=home/pirate/docker-camera/data/postgres:/var/lib/postgresql/data \
+        --volume=/home/pirate/docker-camera/data/postgres:/var/lib/postgresql/data \
         -d tobi312/rpi-postgresql && \
 docker run -dit \
         --restart always \
