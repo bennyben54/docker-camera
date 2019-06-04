@@ -1,6 +1,7 @@
 #!/bin/bash
 docker build -t docker-camera/base ./base
 docker build -t docker-camera/motion ./motion
+docker build -t docker-camera/front ./front
 docker run \
         -e POSTGRES_DB=postgres \
         -e POSTGRES_USER=beo \
@@ -14,4 +15,8 @@ docker run -dit \
         --device=/dev/video1:/dev/video1 \
         --network host \
         --volume=/home/pirate/docker-camera/log:/var/log \
-        docker-camera/motion
+        docker-camera/motion && \
+docker run -dit \
+        --restart always \
+        --network host \
+        docker-camera/front
