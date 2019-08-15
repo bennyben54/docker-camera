@@ -1,4 +1,22 @@
 #!/bin/bash
 docker build -t docker-camera/base ./base
 docker build -t docker-camera/motion ./motion
-docker run -dit --restart always --device=/dev/video0:/dev/video0 --device=/dev/video1:/dev/video1 -p 8081:8081 -p 8082:8082  docker-camera/motion
+docker build -t docker-camera/front ./front
+docker run \
+        -e POSTGRES_DB=postgres \
+        -e POSTGRES_USER=beo \
+        -e POSTGRES_PASSWORD=beo \
+        --network host \
+        --volume=/home/pirate/docker-camera/data/postgres:/var/lib/postgresql/data \
+        -d tobi312/rpi-postgresql && \
+docker run -dit \
+        --restart always \
+        --device=/dev/video0:/dev/video0 \
+        --device=/dev/video1:/dev/video1 \
+        --network host \
+        --volume=/home/pirate/docker-camera/log:/var/log \
+        docker-camera/motion && \
+docker run -dit \
+        --restart always \
+        --network host \
+        docker-camera/front
