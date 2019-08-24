@@ -11,6 +11,12 @@ docker run \
         -d tobi312/rpi-postgresql && \
 docker run -dit \
         --restart always \
+        --network host \
+        --name camera-rabbit-name \
+        rabbitmq:3-management && \
+docker exec camera-rabbit-name rabbitmq-plugins enable rabbitmq_web_stomp && \
+docker run -dit \
+        --restart always \
         --device=/dev/video0:/dev/video0 \
         --device=/dev/video1:/dev/video1 \
         --network host \
