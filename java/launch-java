@@ -1,0 +1,4 @@
+#!/bin/bash
+
+java -jar /motion-gateway-1.0.0.jar > /var/log/motion-gateway.log &
+java -jar /motion-auth-server-1.0.0.jar > /var/log/motion-auth-server.log
