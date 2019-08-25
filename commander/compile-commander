@@ -1,0 +1,11 @@
+#!/bin/bash
+wget https://github.com/bennyben54/commander/archive/master.zip
+unzip master.zip
+cd commander-master/ && mvn clean package -DskipTests
+cd .. && rm -rf master.zip
+
+systemctl stop commander
+cp /home/pirate/docker-camera-master/commander/commander.service /etc/systemd/system/commander.service
+systemctl daemon-reload
+systemctl enable commander
+
