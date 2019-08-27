@@ -33,26 +33,21 @@ do
         -f | --front)
                 buildFront=true
                 ;;
-        -c | --commander)
-                buildCommander=true
-                ;;
-        -br | --browser)
-                buildBrowser=true
-                ;;
         -a | --all)
                 buildAll=true
                 ;;
-         
+
         *)
-            echo $"Usage: $0 {--no-cache | -[-b]ase | -[-p]ostgres | -[-j]ava | -[-r]abbit | -[-f]ront | -[-c]ommander | -[-b]rowser | -[-a]ll}"
+            echo $"Usage: $0 {--no-cache | -[-b]ase | -[-p]ostgres | -[-j]ava | -[-r]abbit | -[-f]ront | -[-c]ommander}"
             exit 1
-done
+esac;
+done;
 
 path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
 
 build-base() {
         echo "build-base"
-       docker build ${noCache} -t docker-camera/base ${path}/base 
+       docker build ${noCache} -t docker-camera/base ${path}/base
 }
 
 build-postgres() {
@@ -121,7 +116,8 @@ build-browser() {
 mkdir -p /home/pirate/docker-camera/data/postgres
 mkdir -p /home/pirate/docker-camera/log
 
-if [ ${buildAll} ] then
+if [ ${buildAll} = true ]
+then
         buildBase=true
         buildPostgres=true
         buildJava=true
@@ -129,25 +125,24 @@ if [ ${buildAll} ] then
         buildFront=true
         buildCommander=true
         buildBrowser=true
-fi;
-if [ ${buildBase} ] then
+fi
+if [ ${buildBase} = true ]
+then
         build-base
-fi;
-if [ ${buildPostgres} ] then
+fi
+if [ ${buildPostgres} = true ]
+then
         build-postgres
-fi;
-if [ ${buildJava} ] then
+fi
+if [ ${buildJava} = true ]
+then
         build-java
-fi;
-if [ ${buildRabbit} ] then
+fi
+if [ ${buildRabbit} = true ]
+then
         build-rabbit
-fi;
-if [ ${buildFront} ] then
+fi
+if [ ${buildFront} = true ]
+then
         build-front
-fi;
-if [ ${buildCommander} ] then
-        build-commander
-fi;
-if [ ${buildBrowser} ] then
-        build-browser
-fi;
+fi
