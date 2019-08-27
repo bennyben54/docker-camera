@@ -1,0 +1,12 @@
+#!/bin/bash
+
+path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
+serviceName=launch-chromium
+serviceNameExtended=${serviceName}.service
+servicePath=/etc/systemd/user/${serviceNameExtended}
+
+echo "compiling ${serviceNameExtended}"
+
+if [ -f "${servicePath}" ]; then systemctl --user stop ${serviceNameExtended}; fi
+cp ${path}/${serviceNameExtended} /etc/systemd/user/${serviceNameExtended}
+systemctl --user daemon-reload

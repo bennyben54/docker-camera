@@ -5,7 +5,7 @@ After=syslog.target network-online.target
 
 [Service]
 Type=simple
-ExecStart=java -jar /home/pirate/docker-camera-master/commander/commander-master/commander-1.0.0.jar > /home/pirate/docker-camera/log/commander.log
+ExecStart=/bin/sh -c '/usr/bin/java -jar /home/pirate/docker-camera-master/commander/commander-master/target/commander-1.0.0.jar > /home/pirate/docker-camera/log/commander.log'
 Restart=on-failure
 RestartSec=10
 KillMode=process

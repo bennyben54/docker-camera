@@ -1,0 +1,150 @@
+#!/bin/bash
+
+noCache=''
+buildBase=false
+buildPostgres=false
+buildJava=false
+buildRabbit=false
+buildFront=false
+buildCommander=false
+buildBrowser=false
+buildAll=false
+
+for param in $@
+do
+  case "$param" in
+        --no-cache)
+                noCache='--no-cache'
+                echo ${noCache}
+                ;;
+        -b | --base)
+                buildBase=true
+                ;;
+        -p | --postgres)
+                buildPostgres=true
+                ;;
+        -j | --java)
+                buildPostgres=true
+                buildJava=true
+                ;;
+        -r | --rabbit)
+                buildRabbit=true
+                ;;
+        -f | --front)
+                buildFront=true
+                ;;
+        -c | --commander)
+                buildCommander=true
+                ;;
+        -br | --browser)
+                buildBrowser=true
+                ;;
+        -a | --all)
+                buildAll=true
+                ;;
+         
+        *)
+            echo $"Usage: $0 {--no-cache | -[-b]ase | -[-p]ostgres | -[-j]ava | -[-r]abbit | -[-f]ront | -[-c]ommander | -[-b]rowser | -[-a]ll}"
+            exit 1
+done
+
+path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
+
+build-base() {
+        echo "build-base"
+       docker build ${noCache} -t docker-camera/base ${path}/base 
+}
+
+build-postgres() {
+        echo "build-postgres"
+        docker container stop camera-postgresql && \
+        docker container rm camera-postgresql && \
+        docker run \
+                -e POSTGRES_DB=postgres \
+                -e POSTGRES_USER=beo \
+                -e POSTGRES_PASSWORD=beo \
+                --restart always \
+                --network host \
+                --volume=/home/pirate/docker-camera/data/postgres:/var/lib/postgresql/data \
+                --name camera-postgresql \
+                -d tobi312/rpi-postgresql
+}
+
+build-java() {
+        echo "build-java"
+        build-postgres &&
+        docker container stop camera-java && \
+        docker container rm camera-java && \
+        docker build ${noCache} -t docker-camera/java ${path}/java && \
+        docker run -dit \
+                --restart always \
+                --network host \
+                --volume=/home/pirate/docker-camera/log:/var/log \
+                --name camera-java \
+                docker-camera/java
+}
+
+build-rabbit() {
+        echo "build-rabbit"
+        docker container stop camera-rabbit && \
+        docker container rm camera-rabbit && \
+        docker run -dit \
+                --restart always \
+                --network host \
+                --name camera-rabbit \
+                rabbitmq:3-management && \
+                docker exec camera-rabbit rabbitmq-plugins enable rabbitmq_web_stomp
+}
+
+build-front() {
+        echo "build-front"
+        docker container stop camera-rabbit && \
+        docker container rm camera-rabbit && \
+        docker build ${noCache} -t docker-camera/front ${path}/front && \
+        docker run -dit \
+        --restart always \
+        --network host \
+        --name camera-front \
+        docker-camera/front
+}
+
+build-commander() {
+        echo "build-commander"
+        ${path}/commander/compile
+}
+
+build-browser() {
+        echo "build-browser"
+        ${path}/chromium/compile
+}
+
+if [ ${buildAll} ] then
+        buildBase=true
+        buildPostgres=true
+        buildJava=true
+        buildRabbit=true
+        buildFront=true
+        buildCommander=true
+        buildBrowser=true
+fi;
+if [ ${buildBase} ] then
+        build-base
+fi;
+if [ ${buildPostgres} ] then
+        build-postgres
+fi;
+if [ ${buildJava} ] then
+        build-java
+fi;
+if [ ${buildRabbit} ] then
+        build-rabbit
+fi;
+if [ ${buildFront} ] then
+        build-front
+fi;
+if [ ${buildCommander} ] then
+        build-commander
+fi;
+if [ ${buildBrowser} ] then
+        build-browser
+fi;
