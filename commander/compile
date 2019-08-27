@@ -1,0 +1,21 @@
+#!/bin/bash
+
+path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
+serviceName=commander
+serviceNameExtended=${serviceName}.service
+servicePath=/etc/systemd/system/${serviceNameExtended}
+
+echo "compiling ${serviceNameExtended}"
+
+wget https://github.com/bennyben54/commander/archive/master.zip
+unzip ${path}/master.zip
+cd ${path}/commander-master && mvn clean package -DskipTests
+cd .. && rm -rf ${path}/master.zip
+
+
+if [ -f "${servicePath}" ]; then systemctl stop ${serviceNameExtended}; fi
+cp ${path}/${serviceNameExtended} ${servicePath}
+systemctl daemon-reload
+systemctl enable ${serviceNameExtended}
+systemctl start ${serviceNameExtended}
+
