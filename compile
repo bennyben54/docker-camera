@@ -6,8 +6,6 @@ buildPostgres=false
 buildJava=false
 buildRabbit=false
 buildFront=false
-buildCommander=false
-buildBrowser=false
 buildAll=false
 
 for param in $@
@@ -93,8 +91,8 @@ build-rabbit() {
 
 build-front() {
         echo "build-front"
-        docker container stop camera-rabbit && \
-        docker container rm camera-rabbit && \
+        docker container stop camera-front && \
+        docker container rm camera-front && \
         docker build ${noCache} -t docker-camera/front ${path}/front && \
         docker run -dit \
         --restart always \
@@ -123,8 +121,6 @@ then
         buildJava=true
         buildRabbit=true
         buildFront=true
-        buildCommander=true
-        buildBrowser=true
 fi
 if [ ${buildBase} = true ]
 then
