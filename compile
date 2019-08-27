@@ -36,7 +36,7 @@ do
                 ;;
 
         *)
-            echo $"Usage: $0 {--no-cache | -[-b]ase | -[-p]ostgres | -[-j]ava | -[-r]abbit | -[-f]ront | -[-c]ommander}"
+            echo $"Usage: $0 {--no-cache | -[-a]ll | -[-b]ase | -[-p]ostgres | -[-j]ava | -[-r]abbit | -[-f]ront | -[-c]ommander}"
             exit 1
 esac;
 done;
