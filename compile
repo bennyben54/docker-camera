@@ -50,8 +50,8 @@ build-base() {
 
 build-postgres() {
         echo "build-postgres"
-        docker container stop camera-postgresql && \
-        docker container rm camera-postgresql && \
+        docker container stop camera-postgresql || true && \
+        docker container rm camera-postgresql || true && \
         docker run \
                 -e POSTGRES_DB=postgres \
                 -e POSTGRES_USER=beo \
@@ -66,8 +66,8 @@ build-postgres() {
 build-java() {
         echo "build-java"
         build-postgres &&
-        docker container stop camera-java && \
-        docker container rm camera-java && \
+        docker container stop camera-java || true && \
+        docker container rm camera-java || true && \
         docker build ${noCache} -t docker-camera/java ${path}/java && \
         docker run -dit \
                 --restart always \
@@ -79,8 +79,8 @@ build-java() {
 
 build-rabbit() {
         echo "build-rabbit"
-        docker container stop camera-rabbit && \
-        docker container rm camera-rabbit && \
+        docker container stop camera-rabbit || true && \
+        docker container rm camera-rabbit || true && \
         docker run -dit \
                 --restart always \
                 --network host \
@@ -91,8 +91,8 @@ build-rabbit() {
 
 build-front() {
         echo "build-front"
-        docker container stop camera-front && \
-        docker container rm camera-front && \
+        docker container stop camera-front || true && \
+        docker container rm camera-front || true && \
         docker build ${noCache} -t docker-camera/front ${path}/front && \
         docker run -dit \
         --restart always \
@@ -128,7 +128,10 @@ then
 fi
 if [ ${buildPostgres} = true ]
 then
-        build-postgres
+        if [ ${buildJava} = false ]
+        then
+                build-postgres
+        fi
 fi
 if [ ${buildJava} = true ]
 then
