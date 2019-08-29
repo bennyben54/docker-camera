@@ -423,13 +423,11 @@ MIT
 
 @angular/material/snack-bar
 
-@angular/material/progress-spinner
+@angular/material/icon
 
 @angular/material/card
 
 @angular/material/progress-bar
-
-@angular/material/icon
 
 @angular/material/form-field
 
