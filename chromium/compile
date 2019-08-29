@@ -10,3 +10,5 @@ echo "compiling ${serviceNameExtended}"
 if [ -f "${servicePath}" ]; then systemctl --user stop ${serviceNameExtended}; fi
 cp ${path}/${serviceNameExtended} /etc/systemd/user/${serviceNameExtended}
 systemctl --user daemon-reload
+
+#sudo cp docker-camera-master/chromium/launch-chromium.service /etc/systemd/system/
