@@ -1,0 +1,16 @@
+Description=launch-chromium
+
+Requires=network.target
+After=display-manager.service
+
+[Service]
+Type=simple
+Environment="DISPLAY=:0"
+Environment="XAUTHORITY=/home/pirate/.Xauthority"
+ExecStart=/home/pirate/launch-chromium
+User=pirate
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
